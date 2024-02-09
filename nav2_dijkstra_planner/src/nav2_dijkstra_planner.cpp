@@ -335,5 +335,4 @@ void DijkstraGlobalPlanner::fromGridToWorld(float &x, float &y) {
 } // namespace nav2_dijkstra_planner
 
 #include "pluginlib/class_list_macros.hpp"
-PLUGINLIB_EXPORT_CLASS(nav2_dijkstra_planner::DijkstraGlobalPlanner,
-                       nav2_core::GlobalPlanner)
+PLUGINLIB_EXPORT_CLASS(nav2_dijkstra_planner::DijkstraGlobalPlanner,nav2_core::GlobalPlanner)

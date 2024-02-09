@@ -8,7 +8,7 @@
 #include <memory>
 #include "nav2_util/node_utils.hpp"
 
-#include "nav2_straightline_planner/straight_line_planner.hpp"
+#include "nav2_dijkstra_planner/straight_line_planner.hpp"
 
 namespace nav2_straightline_planner
 {
@@ -34,21 +34,21 @@ void StraightLine::configure(
 void StraightLine::cleanup()
 {
   RCLCPP_INFO(
-    node_->get_logger(), "CleaningUp plugin %s of type NavfnPlanner",
+    node_->get_logger(), "~~~~~~~~~~~~~~~~~~~~~~ CleaningUp plugin %s of type NavfnPlanner ~~~~~~~~~~~~~~~~~~~~~~",
     name_.c_str());
 }
 
 void StraightLine::activate()
 {
   RCLCPP_INFO(
-    node_->get_logger(), "Activating plugin %s of type NavfnPlanner",
+    node_->get_logger(), "~~~~~~~~~~~~~~~~~~~~~~ Activating plugin %s of type NavfnPlanner ~~~~~~~~~~~~~~~~~~~~~~",
     name_.c_str());
 }
 
 void StraightLine::deactivate()
 {
   RCLCPP_INFO(
-    node_->get_logger(), "Deactivating plugin %s of type NavfnPlanner",
+    node_->get_logger(), "~~~~~~~~~~~~~~~~~~~~~~ Deactivating plugin %s of type NavfnPlanner ~~~~~~~~~~~~~~~~~~~~~~",
     name_.c_str());
 }
 
@@ -61,14 +61,14 @@ nav_msgs::msg::Path StraightLine::createPlan(
   // Checking if the goal and start state is in the global frame
   if (start.header.frame_id != global_frame_) {
     RCLCPP_ERROR(
-      node_->get_logger(), "Planner will only except start position from %s frame",
+      node_->get_logger(), "~~~~~~~~~~~~~~~~~~~~~~ Planner will only except start position from %s frame ~~~~~~~~~~~~~~~~~~~~~~",
       global_frame_.c_str());
     return global_path;
   }
 
   if (goal.header.frame_id != global_frame_) {
     RCLCPP_INFO(
-      node_->get_logger(), "Planner will only except goal position from %s frame",
+      node_->get_logger(), "~~~~~~~~~~~~~~~~~~~~~~ Planner will only except goal position from %s frame ~~~~~~~~~~~~~~~~~~~~~~",
       global_frame_.c_str());
     return global_path;
   }

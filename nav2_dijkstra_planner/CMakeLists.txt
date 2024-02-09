@@ -50,6 +50,7 @@ set(library_name ${PROJECT_NAME}_plugin)
 
 add_library(${library_name} SHARED
   src/nav2_dijkstra_planner.cpp
+  src/straight_line_planner.cpp
 )
 
 ament_target_dependencies(${library_name}
@@ -60,6 +61,7 @@ target_compile_definitions(${library_name} PUBLIC "PLUGINLIB__DISABLE_BOOST_FUNC
 
 
 pluginlib_export_plugin_description_file(nav2_core nav2_dijkstra_planner_plugin.xml)
+pluginlib_export_plugin_description_file(nav2_core nav2_straightline_planner_plugin.xml)
 
 install(TARGETS ${library_name}
   ARCHIVE DESTINATION lib
@@ -71,7 +73,9 @@ install(DIRECTORY include/
   DESTINATION include/
 )
 
-install(FILES nav2_dijkstra_planner_plugin.xml
+install(FILES 
+  nav2_dijkstra_planner_plugin.xml
+  nav2_straightline_planner_plugin.xml
   DESTINATION share/${PROJECT_NAME}
 )
 
