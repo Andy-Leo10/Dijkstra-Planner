@@ -275,6 +275,8 @@ bool DijkstraGlobalPlanner::dijkstraShortestPath(
 
   // empty data container that will store nodes and associated g_costs
   std::vector<std::pair<int, double>> open_list;
+  int neighbor_index;
+  double step_cost;
 
   // empty set to keep track of already visited/closed nodes
   std::unordered_set<int> closed_list;
@@ -297,7 +299,80 @@ bool DijkstraGlobalPlanner::dijkstraShortestPath(
   RCLCPP_INFO(node_->get_logger(), "Dijkstra: Done with initialization");
 
   /** YOUR CODE STARTS HERE */
+  while(!open_list.empty())
+  {
+    // 1. sort open_list based on the lowest 'g_cost' value
+    std::sort(open_list.begin(), open_list.end(), [](const std::pair<int, double>& a, const std::pair<int, double>& b) { return a.second < b.second; });
+    // extract the first element from open_list, it means the node with the lowest g_cost
+    current_node = open_list[0].first;
+    
+    // 2. remove the first element from open_list
+    open_list.erase(open_list.begin());
+    // add the current node to the closed list
+    closed_list.insert(current_node);
 
+    // 3. if the current node is the goal, then break the loop
+    if(current_node == goal_cell_index)
+    {
+      path_found = true;
+      break;
+    }
+
+    // 4. get the neighbors of the current node
+    std::unordered_map<int, double> neighbors = find_neighbors(current_node, costmap_flat);
+    
+    // iterate through the neighbors
+    for(auto neighbor : neighbors)
+    {
+      // get the neighbor's index and step_cost
+      neighbor_index = neighbor.first;
+      step_cost = neighbor.second;
+
+      // 5. check if neighbor is inside the closed list
+      if(closed_list.find(neighbor_index) != closed_list.end())
+      {
+        continue;
+      }
+
+      // calculate g_cost of the neighbor considering the current node
+      double g_cost = g_costs[current_node] + step_cost;
+      // check if the neighbor is inside the open list
+      bool is_in_open_list = std::find_if(open_list.begin(), open_list.end(), [neighbor_index](const std::pair<int, double>& a) { return a.first == neighbor_index; }) != open_list.end();
+
+      // 6. CASE 1: if the neighbor is inside the open list
+      if(is_in_open_list)
+      {
+        // if the new g_cost is lower than the previous g_cost
+        if(g_cost < g_costs[neighbor_index])
+        {
+          // then update the g_cost
+          g_costs[neighbor_index] = g_cost;
+          // update the parent of the neighbor
+          parents[neighbor_index] = current_node;
+          // update the node's g_cost in the open list
+          for(auto& node : open_list)
+          {
+            if(node.first == neighbor_index)
+            {
+              node.second = g_cost;
+              break;
+            }
+          }
+        }
+      }
+      
+      // 7. CASE 2: if the neighbor is not inside the open list
+      else
+      {
+        // update the g_cost of the neighbor
+        g_costs[neighbor_index] = g_cost;
+        // update the parent of the neighbor
+        parents[neighbor_index] = current_node;
+        // add the neighbor to the open list
+        open_list.push_back(std::make_pair(neighbor_index, g_cost));
+      }
+    }
+  }
   /** YOUR CODE ENDS HERE */
 
   return true;
