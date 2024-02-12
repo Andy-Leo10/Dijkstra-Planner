@@ -55,6 +55,7 @@ For pushing branches:
 
 
 # Algorithm
+## Part 1
 Repeat the following while **open_list** is not empty:
 
 1. Extract the node with the smallest **g_cost** from **open_list** and call it **current_node**
@@ -75,3 +76,7 @@ For each node in the list of neighbors of current_node:
 - Add it to **open_list**
 
 When we are done considering all **neighbors** of **current_node**, go to step 2.
+
+## Part 2
+Build the path from start to end.
+- Trace back from the target node to the start node, using each node's parent node.

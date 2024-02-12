@@ -373,9 +373,25 @@ bool DijkstraGlobalPlanner::dijkstraShortestPath(
       }
     }
   }
+  /** RECONSTRUCT PATH BY WORKING BACKWARDS FROM TARGET */
+  if(!path_found)
+  {
+    RCLCPP_WARN(node_->get_logger(), "Dijkstra: No path found");
+  }
+  else // if path found, then reconstruct the path
+  {
+    RCLCPP_INFO(node_->get_logger(), "Dijkstra: Path found");
+    int current_node = goal_cell_index;
+    while(current_node != start_cell_index)
+    {
+      shortest_path.push_back(current_node);
+      current_node = parents[current_node];
+    } // reverse the path
+    std::reverse(shortest_path.begin(), shortest_path.end());
+  }
   /** YOUR CODE ENDS HERE */
 
-  return true;
+  return path_found;
 }
 
 void DijkstraGlobalPlanner::fromWorldToGrid(float &x, float &y) {
